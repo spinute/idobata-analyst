@@ -53,7 +53,6 @@ export const EmbeddedInsightPage = () => {
   }, [projectId]);
 
   // プロジェクトが読み込まれたら選択された論点を更新
-  // biome-ignore lint: This dependency is not specified in the hook dependency list.
   useEffect(() => {
     if (project) {
       if (questionId) {

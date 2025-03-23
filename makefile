@@ -30,6 +30,7 @@ backend-format:
 
 backend-test:
 	cd packages/backend && npm run test
+
 chat-bot-lint:
 	cd packages/chat-bot && npm run lint
 

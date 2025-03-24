@@ -7,6 +7,7 @@
     "dev": "ts-node-dev --respawn src/index.ts",
     "build": "tsc && copyfiles -u 2 \"src/config/prompt-templates/*.txt\" dist/config/prompt-templates/",
     "start": "node dist/index.js",
+    "test": "echo 'not implemented yet'",
     "lint": "biome check .",
     "format": "biome check --write ."
   },

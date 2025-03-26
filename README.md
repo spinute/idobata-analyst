@@ -28,43 +28,34 @@
 
 ## セットアップと実行方法
 
-### 1. 環境変数の設定
+### 1. 環数設定
 
-各ディレクトリの `.env.example` ファイルを `.env` にコピーして必要な環境変数を設定します：
+以下のコマンドでアプリケーションのセットアップ実行します。
 
 ```bash
-# ルートディレクトリ
-cp .env.example .env
-
-# バックエンド
-cp packages/backend/.env.example packages/backend/.env
-
-# フロントエンド
-cp packages/frontend/.env.example packages/frontend/.env
+make setup
 ```
 
-このコードは
-```bash
-sh ./copy-env.sh
-```
-で実行できます。
+ここでは環境変数の設定ファイル `.env`、`packages/backend/.env`、`packages/frontend/.env` を作成しています。
 
-ADMIN_API_KEYは、あなたの環境における管理者認証のためのAPIキーです。好きな文字列を設定してください。
+各ファイルを確認し、必要に応じて以下の環境変数を設定してください：
+
+- ADMIN_API_KEY は、あなたの環境における管理者認証用パスワードです。好きな文字列を設定してください。
+- OPENROUTER_API_KEY は、OpenRouter の API キーです。[OpenRouter](https://openrouter.ai/) で取得してください（アカウントをお持ちでない場合はアカウントの作成が必要です。またサービス利用のためのクレジットが必要です）
 
 ### 2. アプリケーションの起動
 
-以下のコマンドでアプリケーションを起動します：
+以下のコマンドでアプリケーションを起動します。
 
 ```bash
-docker compose up --watch
+make containers-start
 ```
 
-- フロントエンド: <http://localhost:3000>
-- バックエンド: <http://localhost:3001>
+Web ブラウザで <http://localhost:3000> にアクセスすると、自分の PC で起動している idobata アプリケーションが開きます。
 
 ### 3. 試し方
 
-アプリケーションをセットアップした後、以下の手順でCSVデータをアップロードし、論点整理を試すことができます：
+Web ブラウザでアプリケーションを開いた後、以下の手順で CSV データをアップロードし、論点整理を試すことができます：
 
 #### 管理者モードへのアクセス
 

@@ -89,12 +89,12 @@ export class StanceReportGenerator {
     const stanceNames = new Map(stances.map((s) => [s.id, s.name]));
 
     // 初期化
-    stances.forEach((stance) => {
+    for (const stance of stances) {
       stanceAnalysis.set(stance.id, { count: 0, comments: [] });
-    });
+    }
 
     // コメントを分類
-    comments.forEach((comment) => {
+    for (const comment of comments) {
       const stance = comment.stances?.find((s) => s.questionId === questionId);
       if (stance && comment.extractedContent) {
         const analysis = stanceAnalysis.get(stance.stanceId);
@@ -103,7 +103,7 @@ export class StanceReportGenerator {
           analysis.comments.push(comment.extractedContent);
         }
       }
-    });
+    }
 
     try {
       // Geminiによる分析
@@ -114,20 +114,20 @@ export class StanceReportGenerator {
         hasCustomPrompt: !!customPrompt,
       });
 
-      let prompt;
+      let prompt: string;
       try {
         prompt = customPrompt
           ? reportPrompts.stanceReport(
-            questionText,
-            Array.from(stanceAnalysis.entries()),
-            stanceNames,
-            customPrompt,
-          )
+              questionText,
+              Array.from(stanceAnalysis.entries()),
+              stanceNames,
+              customPrompt,
+            )
           : reportPrompts.stanceReport(
-            questionText,
-            Array.from(stanceAnalysis.entries()),
-            stanceNames,
-          );
+              questionText,
+              Array.from(stanceAnalysis.entries()),
+              stanceNames,
+            );
         console.log("Generated prompt:", prompt);
       } catch (error: any) {
         console.error("Failed to generate prompt:", error);

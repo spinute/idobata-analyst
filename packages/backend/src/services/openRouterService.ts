@@ -61,7 +61,9 @@ class OpenRouterService {
       (this.lastAlertTimestamp + minAlertInterval < Date.now() &&
         remainingCredits < remainingCreditsAlertThreshold)
     ) {
-      postToSlack(`Remaining credits: ${remainingCredits}`);
+      postToSlack(
+        `OpenRouterService: 残りクレジットが少なくなっています（remainingCredits: ${remainingCredits.toFixed(1)}）。OpenRouter API は残クレジットが少ないとリクエストが確率的に失敗するようになるので、早めにクレジットを追加してください`,
+      );
       this.lastAlertTimestamp = Date.now();
     }
   }

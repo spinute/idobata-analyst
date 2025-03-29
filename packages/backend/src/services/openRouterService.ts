@@ -1,5 +1,6 @@
 import OpenAI from "openai";
 import type { ChatCompletionCreateParams } from "openai/resources/chat/completions";
+import { postToSlack } from "./slackService";
 
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 if (!OPENROUTER_API_KEY) {
@@ -18,7 +19,7 @@ class OpenRouterService {
 
   constructor(options: { apiKey: string }) {
     this.token = options.apiKey;
-    this.baseURL = 'https://openrouter.ai/api/v1';
+    this.baseURL = "https://openrouter.ai/api/v1";
     this.client = new OpenAI({
       apiKey: this.token,
       baseURL: this.baseURL,
@@ -28,15 +29,17 @@ class OpenRouterService {
   async getRemainingCredits(): Promise<number | null> {
     const response = await fetch(`${this.baseURL}/credits`, {
       headers: {
-        'Authorization': `Bearer ${this.token}`
-      }
+        Authorization: `Bearer ${this.token}`,
+      },
     });
-    
+
     if (!response.ok) {
-      console.error(`Failed to fetch credits: ${response.status} ${response.statusText}`);
+      console.error(
+        `Failed to fetch credits: ${response.status} ${response.statusText}`,
+      );
       return null;
     }
-    
+
     const json = await response.json();
 
     return Number(json.data.total_credits) - Number(json.data.total_usage);
@@ -53,10 +56,12 @@ class OpenRouterService {
     const remainingCreditsAlertThreshold = 100;
     const minAlertInterval = 1000 * 60 * 60; // 1時間
 
-    if (this.lastAlertTimestamp &&
-        this.lastAlertTimestamp + minAlertInterval < Date.now() &&
-        remainingCredits < remainingCreditsAlertThreshold) {
-      console.log('Remaining credits:', remainingCredits);
+    if (
+      !this.lastAlertTimestamp ||
+      (this.lastAlertTimestamp + minAlertInterval < Date.now() &&
+        remainingCredits < remainingCreditsAlertThreshold)
+    ) {
+      postToSlack(`Remaining credits: ${remainingCredits}`);
       this.lastAlertTimestamp = Date.now();
     }
   }
@@ -101,4 +106,6 @@ class OpenRouterService {
   }
 }
 
-export const openRouterService = new OpenRouterService({ apiKey: OPENROUTER_API_KEY });
+export const openRouterService = new OpenRouterService({
+  apiKey: OPENROUTER_API_KEY,
+});

@@ -1,11 +1,11 @@
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import { HomePage } from "./pages/HomePage";
-import { ProjectPage } from "./pages/ProjectPage";
-import { ProjectListPage } from "./pages/ProjectListPage";
+import { Link, Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { AdminAuthPage } from "./pages/AdminAuthPage";
 import CsvUploadPage from "./pages/CsvUploadPage";
-import { PromptSettingsPage } from "./pages/PromptSettingsPage";
 import { EmbeddedInsightPage } from "./pages/EmbeddedInsightPage";
+import { HomePage } from "./pages/HomePage";
+import { ProjectListPage } from "./pages/ProjectListPage";
+import { ProjectPage } from "./pages/ProjectPage";
+import { PromptSettingsPage } from "./pages/PromptSettingsPage";
 
 function App() {
   const isAdmin = !!localStorage.getItem("adminKey");

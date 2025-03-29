@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Question } from "../types/project";
 import { v4 as uuidv4 } from "uuid";
+import type { Question } from "../types/project";
 
 interface ProjectFormProps {
   onSubmit: (
@@ -217,10 +217,14 @@ export const ProjectForm = ({
           <div key={question.id} className="border rounded-lg p-4 space-y-4">
             <div className="flex justify-between items-start">
               <div className="flex-1 mr-4">
-                <label className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor={`question-${question.id}`}
+                  className="block text-sm font-medium text-gray-700"
+                >
                   論点 {qIndex + 1}
                 </label>
                 <input
+                  id={`question-${question.id}`}
                   type="text"
                   value={question.text}
                   onChange={(e) =>
@@ -242,9 +246,9 @@ export const ProjectForm = ({
 
             <div className="space-y-2">
               <div className="flex justify-between items-center">
-                <label className="block text-sm font-medium text-gray-700">
+                <h4 className="text-sm font-medium text-gray-700">
                   立場の選択肢
-                </label>
+                </h4>
                 <button
                   type="button"
                   onClick={() => addStance(question.id)}

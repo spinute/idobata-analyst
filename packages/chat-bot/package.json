@@ -7,7 +7,7 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "ts-node-dev --respawn src/index.ts",
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "lint": "biome check .",
     "format": "biome check --write ."
   },

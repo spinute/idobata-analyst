@@ -1,6 +1,6 @@
-import React from "react";
+import type React from "react";
 import { PromptSettingsForm } from "../components/PromptSettingsForm";
-import { CustomPrompts } from "../types/prompt";
+import type { CustomPrompts } from "../types/prompt";
 
 export const PromptSettingsPage: React.FC = () => {
   const handleSave = (prompts: CustomPrompts) => {

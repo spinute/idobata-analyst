@@ -96,10 +96,11 @@ export const PromptSettingsForm: React.FC<PromptSettingsFormProps> = ({
 
       {/* プロンプトタイプ選択 */}
       <div className="mb-4">
-        <label className="block text-sm font-medium mb-2">
+        <label htmlFor="promptType" className="block text-sm font-medium mb-2">
           プロンプトタイプ
         </label>
         <select
+          id="promptType"
           className="w-full p-2 border rounded"
           value={activeType}
           onChange={(e) => setActiveType(e.target.value as PromptType)}
@@ -114,7 +115,10 @@ export const PromptSettingsForm: React.FC<PromptSettingsFormProps> = ({
 
       {/* プロンプト編集エリア */}
       <div className="mb-4">
-        <label className="block text-sm font-medium mb-2">
+        <label
+          htmlFor="customPrompt"
+          className="block text-sm font-medium mb-2"
+        >
           カスタムプロンプト
         </label>
         {isLoading ? (
@@ -123,6 +127,7 @@ export const PromptSettingsForm: React.FC<PromptSettingsFormProps> = ({
           </div>
         ) : (
           <textarea
+            id="customPrompt"
             className="w-full p-2 border rounded min-h-[200px]"
             value={prompts[activeType] || defaultPrompts[activeType] || ""}
             onChange={(e) => handlePromptChange(activeType, e.target.value)}

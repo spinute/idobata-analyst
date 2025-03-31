@@ -1,5 +1,5 @@
 {
-  "name": "frontend",
+  "name": "@idobata-analyst/frontend",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -23,7 +23,6 @@
     "remark-gfm": "^4.0.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.4",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "@types/uuid": "^10.0.0",

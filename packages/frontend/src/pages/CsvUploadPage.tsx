@@ -85,17 +85,24 @@ const CsvUploadPage: React.FC = () => {
 
       Papa.parse<CsvRow>(file, {
         header: true,
-        preview: 1,
         complete: (results: ParseResult<CsvRow>) => {
           const hasRequiredColumns =
             results.meta.fields?.includes("content") ?? false;
+
+          // Filter out empty rows (where all fields are empty)
+          const filteredData = results.data.filter((row) =>
+            Object.values(row).some(
+              (value) => value !== null && value !== undefined && value !== "",
+            ),
+          );
+
           setPreviewData({
-            totalRows: results.data.length,
+            totalRows: filteredData.length,
             isValid: hasRequiredColumns,
           });
           setStatus(
             hasRequiredColumns
-              ? `${file.name} が選択されました (${results.data.length}件のデータ)`
+              ? `${file.name} が選択されました (${filteredData.length}件のデータ)`
               : "CSVファイルに必要な列(content)が含まれていません",
           );
         },

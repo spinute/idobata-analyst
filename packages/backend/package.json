@@ -1,5 +1,5 @@
 {
-  "name": "backend",
+  "name": "@idobata-analyst/backend",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -23,7 +23,6 @@
     "uuid": "^11.0.5"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.4",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/node": "^20.17.14",

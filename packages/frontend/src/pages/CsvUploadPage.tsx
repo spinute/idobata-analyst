@@ -25,6 +25,8 @@ const CsvUploadPage: React.FC = () => {
     () => !!localStorage.getItem("adminKey"),
   );
 
+  const isDevelopment = process.env.NODE_ENV === "development";
+
   // Project form states
   const [projectName, setProjectName] = useState<string>("");
   const [projectDescription, setProjectDescription] = useState<string>("");
@@ -85,17 +87,24 @@ const CsvUploadPage: React.FC = () => {
 
       Papa.parse<CsvRow>(file, {
         header: true,
-        preview: 1,
         complete: (results: ParseResult<CsvRow>) => {
           const hasRequiredColumns =
             results.meta.fields?.includes("content") ?? false;
+
+          // Filter out empty rows (where all fields are empty)
+          const filteredData = results.data.filter((row) =>
+            Object.values(row).some(
+              (value) => value !== null && value !== undefined && value !== "",
+            ),
+          );
+
           setPreviewData({
-            totalRows: results.data.length,
+            totalRows: filteredData.length,
             isValid: hasRequiredColumns,
           });
           setStatus(
             hasRequiredColumns
-              ? `${file.name} が選択されました (${results.data.length}件のデータ)`
+              ? `${file.name} が選択されました (${filteredData.length}件のデータ)`
               : "CSVファイルに必要な列(content)が含まれていません",
           );
         },
@@ -141,6 +150,57 @@ const CsvUploadPage: React.FC = () => {
       setIsProcessing(false);
     }
   };
+
+  const fillSampleData = useCallback(() => {
+    const topics = ["言論", "政治", "経済", "社会", "文化", "環境", "教育"];
+
+    const randomTopic = topics[Math.floor(Math.random() * topics.length)];
+    const timestamp = new Date().toISOString().slice(0, 16).replace("T", " ");
+
+    setProjectName(`${randomTopic}に関する意見収集 (${timestamp})`);
+    setProjectDescription(
+      `${randomTopic}についての一般的な意見を収集・分析するプロジェクトです`,
+    );
+    setExtractionTopic(`${randomTopic}に関する意見や提案`);
+    setContext(
+      `このプロジェクトでは${randomTopic}に関する様々な意見を収集し、賛成・反対の立場や具体的な提案を整理します。
+収集したデータから主要な論点を抽出し、建設的な議論の基盤を作ることを目指しています。`,
+    );
+  }, []);
+
+  const loadSampleCsv = useCallback(async () => {
+    if (currentStep !== "upload") return;
+
+    try {
+      setStatus("サンプルCSVを読み込み中...");
+
+      const sampleCsvPath = "/sample_comments.csv";
+
+      const response = await fetch(sampleCsvPath);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const csvText = await response.text();
+      const csvBlob = new Blob([csvText], { type: "text/csv" });
+      const file = new File([csvBlob], "sample_comments.csv", {
+        type: "text/csv",
+      });
+
+      const syntheticEvent = {
+        target: {
+          files: [file],
+        },
+      } as unknown as React.ChangeEvent<HTMLInputElement>;
+
+      handleFileSelect(syntheticEvent);
+    } catch (error) {
+      console.error("Error loading sample CSV:", error);
+      setStatus(
+        `サンプルCSVの読み込みに失敗しました: ${error instanceof Error ? error.message : "不明なエラー"}`,
+      );
+    }
+  }, [currentStep, handleFileSelect]);
 
   const processInBatches = useCallback(
     async (data: CsvRow[], batchSize = 100) => {
@@ -300,6 +360,15 @@ const CsvUploadPage: React.FC = () => {
       {/* Project creation form */}
       {currentStep === "project" && (
         <div className="space-y-4">
+          {isDevelopment && (
+            <button
+              type="button"
+              onClick={fillSampleData}
+              className="mb-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+            >
+              サンプルデータを入力（開発環境用）
+            </button>
+          )}
           <div>
             <label className="block text-sm font-medium text-gray-700">
               プロジェクト名
@@ -364,6 +433,16 @@ const CsvUploadPage: React.FC = () => {
       {/* CSV upload form */}
       {currentStep === "upload" && (
         <div className="space-y-4">
+          {isDevelopment && (
+            <button
+              type="button"
+              onClick={loadSampleCsv}
+              className="mb-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+              disabled={isProcessing}
+            >
+              サンプルデータを読み込む（開発環境用）
+            </button>
+          )}
           <div>
             <label className="block text-sm font-medium text-gray-700">
               CSVファイル

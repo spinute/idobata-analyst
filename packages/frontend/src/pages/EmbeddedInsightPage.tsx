@@ -25,14 +25,11 @@ export const EmbeddedInsightPage = () => {
   const isAnalyticsRoute = location.pathname.endsWith("/analytics");
   const isCommentsRoute = location.pathname.endsWith("/comments");
 
-  // ビジュアル分析タブで植え込みコンテンツの余白を詰めたいので
+  // ビジュアル分析タブで埋め込みコンテンツの余白を詰めたいので
   useEffect(() => {
-    document.body.style.padding = "0";
-    document.body.style.margin = "0";
-
+    document.body.classList.add("embedded-visual-analysis");
     return () => {
-      document.body.style.padding = "";
-      document.body.style.margin = "";
+      document.body.classList.remove("embedded-visual-analysis");
     };
   }, []);
 

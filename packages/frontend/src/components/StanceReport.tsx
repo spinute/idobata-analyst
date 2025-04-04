@@ -6,7 +6,11 @@ import { analyzeStances } from "../config/api";
 import type { Comment, CommentSourceType } from "../types/comment";
 import type { Project, Question, StanceAnalysisReport } from "../types/project";
 import { convertBoldBrackets } from "../utils/markdownHelper";
-import { StanceGraphComponent } from "./StanceGraphComponent";
+import {
+  CHART_COLORS,
+  OTHER_COLOR,
+  StanceGraphComponent,
+} from "./StanceGraphComponent";
 
 interface StanceAnalyticsProps {
   comments: Comment[];
@@ -263,13 +267,23 @@ export const StanceReport = ({
                             <div
                               key={comment._id}
                               className={`
-                              bg-white px-3 py-2 text-sm border-l-4 border-blue-400
+                              bg-white px-3 py-2 text-sm border-l-4
                               ${
                                 !expandedStances[stanceId] && index === 2
                                   ? "relative"
                                   : ""
                               }
                             `}
+                              style={{
+                                borderLeftColor:
+                                  stanceId === "other"
+                                    ? OTHER_COLOR
+                                    : CHART_COLORS[
+                                        selectedQuestion.stances.findIndex(
+                                          (s) => s.id === stanceId,
+                                        ) % CHART_COLORS.length
+                                      ],
+                              }}
                             >
                               <div className="flex items-center justify-between">
                                 <div className="flex-1">
